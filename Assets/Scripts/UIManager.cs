@@ -3,55 +3,38 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using System.Linq;
-using UnityEngine.Networking;
 
-//public enum DataType
-//{
-//    None,
-//    Title,
-//    Overview,
-//    Image
-//}
+
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI title;
     [SerializeField] private TextMeshProUGUI overview;
     [SerializeField] private Image image;
-    //Dictionary<DataType, GameObject> objects = new Dictionary<DataType, GameObject>();
-    private Data currentData = new Data();
 
-    private List<Texture> images = new List<Texture>();
 
-    private void Start()
+    public void SetValue(Texture2D texture = null, string title = null, string overview = null)
     {
-        SetDictionary();
+        if(texture != null)
+            ApplySprite(texture);
+
+        if(title != null && overview != null)
+            ApplyText(title, overview);
     }
 
-    private void SetDictionary()
+    #region Apply
+
+    private void ApplySprite(Texture2D texture2D = null)
     {
-        //objects.Add(DataType.Title, title.gameObject);
-        //objects.Add(DataType.Overview, overview.gameObject);
-        //objects.Add(DataType.Image, image.gameObject);
+        Rect rec = new Rect(0, 0, texture2D.width, texture2D.height);
+        Sprite currentSprite = Sprite.Create(texture2D, rec, new Vector2(0.5f,0.5f), 100);
+        image.sprite = currentSprite;
     }
 
-    //public GameObject GetObject(DataType type) => objects[type];
-    
-    public void SetValue(Data value, List<Texture> textures)
+    private void ApplyText(string titleValue, string overviewValue)
     {
-        if(currentData != value)
-        {
-            currentData = value;
-        }
-
-        images = textures;
-        ApplyValue();
+        title.text = titleValue;
+        overview.text = overviewValue;
     }
 
-    public void ApplyValue()
-    {
-        image.material.mainTexture = images.FirstOrDefault();
-    }
-
-    
+    #endregion Apply
 }
